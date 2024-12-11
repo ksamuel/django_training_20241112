@@ -1,10 +1,10 @@
 <nav>
     <ul>
         <li>
-            <a href="/">Home</a>
+            <a href="{% url 'home'  %}">Home</a>
         </li>
         <li>
-            <a href="/coucou/">Hello!</a>
+            <a href="{% url 'hello' name="Anonyme" %}">Hello!</a>
         </li>
     </ul>
 </nav>

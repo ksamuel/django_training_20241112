@@ -14,9 +14,9 @@ def home(request):
     return render(request, "website/home.html")
 
 
-def hello(request):
+def hello(request, name):
     now = get_date()
-    name = "kevin".title()
+    name = name.title()
     age = random.randint(12, 25)
 
     fruits = ["pomme", "banane", "poire"]

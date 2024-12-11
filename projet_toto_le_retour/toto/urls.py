@@ -19,4 +19,8 @@ from django.contrib import admin
 from django.urls import path
 from website.views import hello, home
 
-urlpatterns = [path("admin/", admin.site.urls), path("coucou/", hello), path("", home)]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("hello/<str:name>/", hello, name="hello"),
+    path("", home, name="home"),
+]
