@@ -1,0 +1,14 @@
+
+{% extends "website/base.html" %} 
+
+{% block "title" %}Addition{% endblock "title" %}
+
+{% block "content" %}
+    {% include "website/_menu.html" %}
+
+    <h1>Addition</h1>
+    <p>a: {{ a }}</p>
+    <p>b: {{ b }}</p>
+    <p>total: {{ total }}</p>
+ 
+{% endblock "content" %}

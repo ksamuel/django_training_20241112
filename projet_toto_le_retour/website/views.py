@@ -25,3 +25,10 @@ def hello(request, name):
         "website/hello.html",
         {"fruits": fruits, "now": now, "name": name, "age": age},
     )
+
+
+def addition(request):
+    a = int(request.GET.get("a", 0))
+    b = int(request.GET.get("b", 0))
+    resultat = a + b
+    return render(request, "website/addition.html", {"total": resultat, "a": a, "b": b})
