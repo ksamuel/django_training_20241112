@@ -16,17 +16,25 @@ def home(request):
     return render(request, "website/home.html")
 
 
-def hello(request, name):
+def hello(request, name=""):
     now = get_date()
-    name = name.title()
+
     age = random.randint(12, 25)
 
+    if not name:
+        name = request.COOKIES.get("name", "Anonyme")
+
+    name = name.title()
+
     fruits = ["pomme", "banane", "poire"]
-    return render(
+    response = render(
         request,
         "website/hello.html",
         {"fruits": fruits, "now": now, "name": name, "age": age},
     )
+    if name:
+        response.set_cookie("name", name)
+    return response
 
 
 def addition(request):

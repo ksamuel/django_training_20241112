@@ -21,7 +21,8 @@ from website.views import addition, hello, home, palindrom_with_django_form
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("hello/<str:name>/", hello, name="hello"),
+    path("hello/", hello, name="hello"),
+    path("hello/<str:name>/", hello),
     path("addition/", addition, name="addition"),
     # path("palindrom/", palindrom, name="palindrom"),
     path("palindrom/", palindrom_with_django_form, name="palindrom"),

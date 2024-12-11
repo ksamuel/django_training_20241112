@@ -6,12 +6,11 @@
 {% block "content" %}
     {% include "website/_menu.html" %}
 
-    <h1>Hello !</h1>
+    <h1>Hello {{ name  }} !</h1>
     <p>Ceci est la première page html avec date:</p>
 
     <p>{{ now|date:"d/m/Y H:i:s" }}</p>
 
-    <p>{{ name|capfirst }}</p>
 
     {% if age >= 18 %}
     <p>Vous pouvez rentrer en boîte</p>
