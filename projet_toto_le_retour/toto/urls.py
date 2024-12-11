@@ -17,11 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from website.views import addition, hello, home
+from website.views import addition, hello, home, palindrom
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("hello/<str:name>/", hello, name="hello"),
     path("addition/", addition, name="addition"),
+    path("palindrom/", palindrom, name="palindrom"),
     path("", home, name="home"),
 ]
