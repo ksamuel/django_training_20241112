@@ -1,10 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello page</title>
 </head>
 
 <body>
+
+    {% include "website/_menu.html" %}
+
     <h1>Hello !</h1>
     <p>Ceci est la première page html avec date:</p>
 
-    <p>{{ maintenant }}</p>
+    <p>{{ now|date:"d/m/Y H:i:s" }}</p>
+
+    <p>{{ name|capfirst }}</p>
+
+    {% if age >= 18 %}
+    <p>Vous pouvez rentrer en boîte</p>
+    {% else %}
+    <p>Ca va pas être possible monsieur</p>
+    {% endif %}
+
+    <ul>
+        {% for un_fruit in fruits %}
+        <li>{{ un_fruit }}</li>
+        {% endfor %}
+    </ul>
+
 </body>
+
+</html>
