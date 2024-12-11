@@ -1,0 +1,26 @@
+
+{% extends "website/base.html" %} 
+
+{% block "title" %}Check palindrom{% endblock "title" %}
+
+{% block "content" %}
+    {% include "website/_menu.html" %}
+
+    <h1>Palindrome 2</h1>
+    
+    <form target="." method="post">
+        {{ form }}
+        <p><button>Verifier</button></p>
+        {% csrf_token %}
+    </form>
+
+   {% if form.is_valid %}
+    {% if is_palindrom %}
+ 
+    <p>Oui "{{form.cleaned_data.word}}" est un palindrome<p/>
+    {% else %}
+    <p>Non "{{form.cleaned_data.word}}" n'est pas un palindrome<p/>
+    {% endif %}
+   {% endif %}
+
+{% endblock "content" %}

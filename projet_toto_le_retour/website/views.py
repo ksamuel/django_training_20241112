@@ -5,6 +5,8 @@ import random
 
 from django.shortcuts import render
 
+from website.forms import PalindromForm
+
 
 def get_date():
     return dt.datetime.now()
@@ -49,4 +51,19 @@ def palindrom(request):
 
     return render(
         request, "website/palindrom.html", {"is_palindrom": is_palindrom, "word": word}
+    )
+
+
+def palindrom_with_django_form(request):
+    form = PalindromForm(request.POST or None)
+    is_palindrom = False
+
+    if form.is_valid():
+        word = form.cleaned_data["word"]
+        is_palindrom = word == word[::-1]
+
+    return render(
+        request,
+        "website/palindrom_with_django_form.html",
+        {"is_palindrom": is_palindrom, "form": form},
     )
