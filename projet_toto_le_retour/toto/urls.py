@@ -19,9 +19,17 @@ from django.contrib import admin
 from django.urls import path
 from website.views import addition, hello, home, palindrom_with_django_form
 
+# Python routing
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("hello/", hello, name="hello"),
+    path(
+        "admin/",  # URL
+        admin.site.urls,  # View to call
+    ),
+    path(
+        "hello/",
+        hello,
+        name="hello",  # name of the view for url reversing
+    ),
     path("hello/<str:name>/", hello),
     path("addition/", addition, name="addition"),
     # path("palindrom/", palindrom, name="palindrom"),

@@ -1,5 +1,6 @@
 
 {% extends "website/base.html" %} 
+{% load malboro_avec_filtre %}
 
 {% block "title" %}Check palindrom{% endblock "title" %}
 
@@ -19,7 +20,7 @@
  
     <p>Oui "{{form.cleaned_data.word}}" est un palindrome<p/>
     {% else %}
-    <p>Non "{{form.cleaned_data.word}}" n'est pas un palindrome<p/>
+    <p>Non "{{form.cleaned_data.word}}" n'est pas un palindrome car l'inverse est "{{ form.cleaned_data.word|reverse_string }}"<p/>
     {% endif %}
    {% endif %}
 
