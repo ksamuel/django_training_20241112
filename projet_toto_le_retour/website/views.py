@@ -16,12 +16,16 @@ def home(request):
     return render(request, "website/home.html")
 
 
-def hello(request, name=""):
+def hello(
+    request,
+    name="",  # parameter extracted from url path
+):
     now = get_date()
 
     age = random.randint(12, 25)
 
     if not name:
+        # Get data from cookie (text only)
         name = request.COOKIES.get("name", "Anonyme")
 
     name = name.title()
@@ -33,13 +37,14 @@ def hello(request, name=""):
         {"fruits": fruits, "now": now, "name": name, "age": age},
     )
     if name:
+        # Set cookie value and send it to the client
         response.set_cookie("name", name)
     return response
 
 
 def addition(request):
     try:
-        a = int(request.GET["a"])
+        a = int(request.GET["a"])  # get data from querystring
     except (KeyError, ValueError):
         a = 0
 
@@ -54,7 +59,7 @@ def palindrom(request):
     is_palindrom = False
 
     if request.POST:
-        word = request.POST.get("word", "")
+        word = request.POST.get("word", "")  # get data from form
         is_palindrom = word == word[::-1]
 
     return render(
