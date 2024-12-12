@@ -3,9 +3,14 @@
 import datetime as dt
 import random
 
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 
 from website.forms import PalindromForm
+
+
+def has_cool_username(user):
+    return user.username in ["kevin", "nolan"]
 
 
 def get_date():
@@ -42,6 +47,8 @@ def hello(
     return response
 
 
+@login_required
+@user_passes_test(has_cool_username)
 def addition(request):
     try:
         a = int(request.GET["a"])  # get data from querystring
