@@ -1,3 +1,7 @@
 body {
     padding: 2rem;
 }
+
+nav li.current_page {
+    background-color: aliceblue;
+}

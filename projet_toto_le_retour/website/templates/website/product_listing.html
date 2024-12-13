@@ -1,0 +1,40 @@
+
+{% extends "website/base.html" %} 
+
+{% block "title" %}Product listing{% endblock "title" %}
+
+{% block "content" %}
+
+<h1>Product listing<h1>
+
+<form target="." method="post">
+    {{ form }}
+    <p><button>Add product</button></p>
+    {% csrf_token %}
+</form>
+
+<ul>
+    {% for prod in products %}
+    <li><strong>{{ prod.name }}</strong>: {{ prod.price }}</li>
+    {% endfor %}
+</ul>
+
+<p>
+    Pages:
+<nav>
+    <ul>
+        {% for page in all_pages %}
+        <li  <a {% if current_page == page %}class="current_page"{% endif %}>
+            <a href=".?page={{page}}&filter={{page_filter}}">{{page}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+</p>
+
+<form target="." method="get">
+    <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
+    <button>Filter</button></p>
+</form>
+
+{% endblock "content" %}

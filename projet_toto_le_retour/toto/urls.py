@@ -17,7 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from website.views import addition, hello, home, palindrom_with_django_form
+from website.views import (
+    addition,
+    hello,
+    home,
+    palindrom_with_django_form,
+    product_listing,
+)
 
 # Python routing
 urlpatterns = [
@@ -34,5 +40,6 @@ urlpatterns = [
     path("addition/", addition, name="addition"),
     # path("palindrom/", palindrom, name="palindrom"),
     path("palindrom/", palindrom_with_django_form, name="palindrom"),
+    path("products/", product_listing, name="products"),
     path("", home, name="home"),
 ]

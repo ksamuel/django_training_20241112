@@ -53,3 +53,28 @@ Insert the <app_name> in ``INSTALLED_APPS`!
 ```
 python manage.py runserver
 ```
+
+# ORM
+
+```
+In [1]: p = Product.objects.create(name="Montre", price=60)
+In [3]: p =  Product(name="Stylo", price=3)
+In [4]: p.save()
+In [5]: Product.objects.get(id=5)
+Out[5]: <Product: Croissant>
+In [6]: Product.objects.filter(price__gte=1)[a:4]
+In [7]: Product.objects.filter(price__gte=1)[1:4]
+Out[7]: <QuerySet [<Product: Brique de lait (1l)>, <Product: iPhone>, <Product: Steam Deck>]>
+In [28]: prods.order_by("-name")
+Out[28]: <QuerySet [<Product: iPhone>, <Product: Stylo>, <Product: Steam Deck>, <Product: Montre>, <Product: Brique de lait (1l)>, <Product: Baguette>]>
+In [29]: prods.order_by("-name", "price")
+Out[29]: <QuerySet [<Product: iPhone>, <Product: Stylo>, <Product: Steam Deck>, <Product: Montre>, <Product: Brique de lait (1l)>, <Product: Baguette>]>
+In [31]: from django.db.models import Count, Case, When
+In [34]: Product.objects.aggregate(cheap=Count(Case(When(price__lt=10, then=1))), expensive=Count(Case(When(price__gte=10, then=1))))
+Out[34]: {'cheap': 4, 'expensive': 3}
+In [39]: from django.db.models import F
+In [40]: from django.db.models.functions import Length
+In [43]: p = Product.objects.annotate(gros_prix=F('price') + Length('name'))
+In [44]: p[0].gros_prix
+Out[44]: 9.3
+```

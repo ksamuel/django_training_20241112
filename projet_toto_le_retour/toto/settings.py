@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "website",
-    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -105,6 +104,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# We use django admin login form
 LOGIN_URL = "/admin/login/"
 LOGOUT_URL = "/admin/logout/"
 LOGIN_REDIRECT_URL = "/"

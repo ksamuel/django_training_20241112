@@ -12,3 +12,8 @@ class PalindromForm(forms.Form):
             cleaned_data["word"] = cleaned_data["word"].upper()
 
         return cleaned_data
+
+
+class ProductForm(forms.Form):
+    name = forms.CharField(max_length=300, required=True)
+    price = forms.FloatField(min_value=0)
