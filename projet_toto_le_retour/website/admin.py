@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from website.models import Product
+from website.models import Product, Sale
 
 
 class ProductAdmin(admin.ModelAdmin):
@@ -9,4 +9,9 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("name",)  # Rechercher par le champ `name`
 
 
+class SaleAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["product"]
+
+
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Sale, SaleAdmin)
