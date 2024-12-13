@@ -1,0 +1,49 @@
+
+{% extends "website/base.html" %} 
+
+{% block "title" %}Product listing{% endblock "title" %}
+
+{% block "content" %}
+
+{% include "website/_menu.html" %}
+
+<h1>Product listing</h1>
+
+<form target="." method="post">
+    {{ form }}
+    <p><button>Add product</button></p>
+    {% csrf_token %}
+</form>
+
+<div id="product-list">
+{% include "website/_product_list.html" with products=products %}
+</div>
+
+<p>
+    Pages:
+<nav>
+    <ul>
+        {% for page in all_pages %}
+        <li  <a {% if current_page == page %}class="current_page"{% endif %}>
+            <a href=".?page={{page}}&filter={{page_filter}}">{{page}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+</p>
+
+<form id="filter-form" target="." method="get"
+    hx-get="/partial/product/list/?page={{page}}&filter={{page_filter}}"
+    hx-target="#product-list"
+    hx-swap="innerHTML"
+>
+    <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
+    <button>Filter</button></p>
+</form>
+
+{% endblock "content" %}
+
+
+{% block additional_js %}
+<script src="https://unpkg.com/htmx.org@2.0.3"></script>
+{% endblock additional_js %}

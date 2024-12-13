@@ -15,11 +15,10 @@
     {% csrf_token %}
 </form>  
 
-<ul>
-    {% for prod in product_list %}
-    <li><strong>{{ prod.name }}</strong>: {{ prod.price }}</li>
-    {% endfor %}
-</ul>
+<div id="product-list">
+    {% include "website/_product_list.html" with products=products %}
+</div>
+    
 
 <p>
     Pages {{current_page}}:

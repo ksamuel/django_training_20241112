@@ -7,7 +7,7 @@
 
 {% include "website/_menu.html" %}
 
-<h1>Product listing<h1>
+<h1>Product listing</h1>
 
 <form target="." method="post">
     {{ form }}
@@ -15,11 +15,9 @@
     {% csrf_token %}
 </form>
 
-<ul>
-    {% for prod in products %}
-    <li><strong>{{ prod.name }}</strong>: {{ prod.price }}</li>
-    {% endfor %}
-</ul>
+<div id="product-list">
+{% include "website/_product_list.html" with products=products %}
+</div>
 
 <p>
     Pages:
@@ -34,9 +32,46 @@
 </nav>
 </p>
 
-<form target="." method="get">
+<form id="filter-form" target="." method="get">
     <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
     <button>Filter</button></p>
 </form>
 
 {% endblock "content" %}
+
+
+{% block additional_js %}
+<script>
+let filterForm = document.getElementById("filter-form")
+filterForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+    let filterValue = filterForm.filter.value
+ 
+    let params = new URLSearchParams(window.location.search);
+    let page = params.get('page') || 1;
+
+    // with html
+    result = fetch(`/partial/product/list/?page=${page}&filter=${filterValue}`)
+    result.then((response) => {
+        response.text().then((html) => {
+            let productList = document.getElementById("product-list")
+            productList.innerHTML = html
+        })
+    })
+    
+    // with json
+    result = fetch(`/api/product/list/?page=${page}&filter=${filterValue}`,
+        {
+            headers: { 'Content-Type': 'application/json' }
+            })
+    result.then((response) => {
+        response.json().then((data) => {
+            console.log(data)
+        })
+    })
+
+})
+
+</script>
+
+{% endblock additional_js %}

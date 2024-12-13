@@ -9,6 +9,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, ListView
+from rest_framework import serializers
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from website.forms import PalindromForm, ProductForm, ProductModelForm
 from website.models import Product
@@ -134,6 +137,31 @@ def product_listing(request):
     )
 
 
+def ajax_product_list(request):
+    products = Product.objects.all()
+
+    product_filter = request.GET.get("filter", "")
+    if product_filter:
+        products = products.filter(name__icontains=product_filter)
+
+    try:
+        current_page = int(request.GET.get("page", 1))
+    except (ValueError, TypeError):
+        current_page = 1
+
+    product_start = (current_page - 1) * PAGINATION
+    product_stop = product_start + PAGINATION
+    products = products[product_start:product_stop]
+
+    return render(
+        request,
+        "website/_product_list.html",
+        {
+            "products": products,
+        },
+    )
+
+
 def product_listing_with_automation(request):
     form = ProductModelForm(request.POST or None)
     if form.is_valid():
@@ -170,7 +198,7 @@ def product_listing_with_automation(request):
 def filter_queryset(request, queryset):
     product_filter = request.GET.get("filter", "")
     if product_filter:
-        return queryset.filter(name__icontains=product_filter)
+        return queryset.filter(name__icontains=product_filter), product_filter
     return queryset, product_filter
 
 
@@ -222,7 +250,11 @@ class PaginatedListViewMixin:
 
     def get_context_data(self):
         context = super().get_context_data()
-        context["current_page"] = int(self.request.GET.get("page", 1))
+        try:
+            context["current_page"] = int(self.request.GET.get("page", 1))
+        except (ValueError, TypeError):
+            context["current_page"] = 1
+
         return context
 
 
@@ -244,3 +276,17 @@ class ProductListView(
         context = super().get_context_data()
         context["filter"] = self.product_filter
         return context
+
+
+class ProductSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    price = serializers.FloatField()
+
+
+@api_view(["GET"])
+def api_product_list(request):
+    products, _ = filter_queryset(request, Product.objects.all())
+    _, _, page = paginate_queryset(request, products)
+    serializer = ProductSerializer(list(page.object_list), many=True)
+    return Response(serializer.data)

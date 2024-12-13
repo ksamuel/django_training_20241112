@@ -20,9 +20,12 @@ from django.urls import path
 from website.views import (
     ProductListView,
     addition,
+    ajax_product_list,
+    api_product_list,
     hello,
     home,
     palindrom_with_django_form,
+    product_listing,
 )
 
 # Python routing
@@ -42,5 +45,15 @@ urlpatterns = [
     path("palindrom/", palindrom_with_django_form, name="palindrom"),
     # path("products/", product_listing_with_automation, name="products"),
     path("products/", ProductListView.as_view(), name="products"),
+    path("ajax_products/", product_listing),  # full page
+    path("partial/product/list/", ajax_product_list),  # page subset
+    path("api/product/list/", api_product_list),
+    path(
+        "htmx/demo/",
+        ProductListView.as_view(
+            context_object_name="products",
+            template_name="website/product_listing_htmx.html",
+        ),
+    ),
     path("", home, name="home"),
 ]
