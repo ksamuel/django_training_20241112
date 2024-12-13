@@ -1,21 +1,37 @@
 
 {% extends "website/base.html" %} 
-
-{% block "title" %}Hello page !!!{% endblock "title" %}
+{% load i18n %}
+{% block "title" %}
+{% blocktrans %}
+Hello page !!!
+{% endblocktrans %}
+{% endblock "title" %}
 
 {% block "content" %}
     {% include "website/_menu.html" %}
 
     <h1>Hello {{ name  }} !</h1>
-    <p>Ceci est la première page html avec date:</p>
+    <p>
+        {% blocktrans %}
+        This is the first HTML page with a date
+        {% endblocktrans %}
+    </p>
 
     <p>{{ now|date:"d/m/Y H:i:s" }}</p>
 
 
     {% if age >= 18 %}
-    <p>Vous pouvez rentrer en boîte</p>
+    <p>
+        {% blocktrans %}
+        You can't enter in the night club
+        {% endblocktrans %}
+    </p>
     {% else %}
-    <p>Ca va pas être possible monsieur</p>
+    <p>
+        {% blocktrans %}
+        Not possible, sir
+        {% endblocktrans %}
+    </p>
     {% endif %}
 
     <ul>

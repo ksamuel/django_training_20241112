@@ -78,3 +78,26 @@ In [43]: p = Product.objects.annotate(gros_prix=F('price') + Length('name'))
 In [44]: p[0].gros_prix
 Out[44]: 9.3
 ```
+
+# Translation:
+
+Install gettex for windows: https://mlocati.github.io/articles/gettext-iconv-windows.html
+
+Create a directory for each translation in your app:
+
+```
+locale/<lang_code>/LC_MESSAGES
+```
+
+Ex:
+
+```
+locale/fr/LC_MESSAGES for french.
+```
+
+Then run:
+
+```
+python manage.py makemessages -l fr
+python manage.py compilemessages
+```

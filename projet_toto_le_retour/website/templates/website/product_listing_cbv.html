@@ -8,35 +8,37 @@
 {% include "website/_menu.html" %}
 
 <h1>Product listing<h1>
-
+  
 <form target="." method="post">
     {{ form }}
     <p><button>Add product</button></p>
     {% csrf_token %}
-</form>
+</form>  
 
 <ul>
-    {% for prod in products %}
+    {% for prod in product_list %}
     <li><strong>{{ prod.name }}</strong>: {{ prod.price }}</li>
     {% endfor %}
 </ul>
 
 <p>
-    Pages:
+    Pages {{current_page}}:
+ 
 <nav>
     <ul>
-        {% for page in all_pages %}
-        <li  <a {% if current_page == page %}class="current_page"{% endif %}>
-            <a href=".?page={{page}}&filter={{page_filter}}">{{page}}</a>
+        {% for p in paginator.page_range %}
+        <li  <a {% if current_page == p %}class="current_page"{% endif %}>
+            <a href=".?page={{p}}&filter={{page_filter}}">{{p}}</a>
         </li>
         {% endfor %}
     </ul>
 </nav>
-</p>
+</p>  
+ 
 
 <form target="." method="get">
     <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
     <button>Filter</button></p>
-</form>
+</form> 
 
 {% endblock "content" %}

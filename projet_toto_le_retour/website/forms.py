@@ -1,5 +1,7 @@
 from django import forms
 
+from website.models import Product
+
 
 class PalindromForm(forms.Form):
     word = forms.CharField(max_length=300, label="Mot à vérifier", required=True)
@@ -17,3 +19,9 @@ class PalindromForm(forms.Form):
 class ProductForm(forms.Form):
     name = forms.CharField(max_length=300, required=True)
     price = forms.FloatField(min_value=0)
+
+
+class ProductModelForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["name", "price"]

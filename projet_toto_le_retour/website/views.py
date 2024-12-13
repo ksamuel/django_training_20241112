@@ -4,9 +4,13 @@ import datetime as dt
 import random
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.utils.translation import gettext as _
+from django.views.generic import CreateView, ListView
 
-from website.forms import PalindromForm, ProductForm
+from website.forms import PalindromForm, ProductForm, ProductModelForm
 from website.models import Product
 
 
@@ -32,11 +36,11 @@ def hello(
 
     if not name:
         # Get data from cookie (text only)
-        name = request.COOKIES.get("name", "Anonyme")
+        name = request.COOKIES.get("name", _("Anonymous"))
 
     name = name.title()
 
-    fruits = ["pomme", "banane", "poire"]
+    fruits = [_("apple"), _("banane"), _("pear")]
     response = render(
         request,
         "website/hello.html",
@@ -128,3 +132,115 @@ def product_listing(request):
             "form": form,
         },
     )
+
+
+def product_listing_with_automation(request):
+    form = ProductModelForm(request.POST or None)
+    if form.is_valid():
+        p = form.save()
+        return redirect("products")
+
+    products = Product.objects.all()
+
+    product_filter = request.GET.get("filter", "")
+    if product_filter:
+        products = products.filter(name__icontains=product_filter)
+
+    try:
+        current_page = int(request.GET.get("page", 1))
+    except (ValueError, TypeError):
+        current_page = 1
+
+    paginator = Paginator(products, PAGINATION)
+    products = paginator.get_page(current_page)
+
+    return render(
+        request,
+        "website/product_listing.html",
+        {
+            "all_pages": paginator.page_range,
+            "current_page": current_page,
+            "product_filter": product_filter,
+            "products": products,
+            "form": form,
+        },
+    )
+
+
+def filter_queryset(request, queryset):
+    product_filter = request.GET.get("filter", "")
+    if product_filter:
+        return queryset.filter(name__icontains=product_filter)
+    return queryset, product_filter
+
+
+def paginate_queryset(request, queryset, pagination=PAGINATION):
+    try:
+        current_page = int(request.GET.get("page", 1))
+    except (ValueError, TypeError):
+        current_page = 1
+
+    paginator = Paginator(queryset, PAGINATION)
+    return paginator, current_page, paginator.get_page(current_page)
+
+
+def handle_form(request, form_class):
+    form = form_class(request.POST or None)
+    if form.is_valid():
+        form.save()
+        raise HttpResponseRedirect("/products/")
+    return form
+
+
+def product_listing_with_automation_decoupled(request):
+    form = handle_form(request, ProductModelForm)
+    products, product_filter = filter_queryset(request, Product.objects.all())
+    paginator, current_page, products = paginate_queryset(request, products)
+
+    return render(
+        request,
+        "website/product_listing.html",
+        {
+            "all_pages": paginator.page_range,
+            "current_page": current_page,
+            "product_filter": product_filter,
+            "products": products,
+            "form": form,
+        },
+    )
+
+
+class FilteredListViewMixin:
+    def get_queryset(self):
+        qs = super().get_queryset()
+        self.product_filter = self.request.GET.get("filter", "")
+        return qs.filter(name__icontains=self.product_filter)
+
+
+class PaginatedListViewMixin:
+    paginate_by = 10
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["current_page"] = int(self.request.GET.get("page", 1))
+        return context
+
+
+class ProductListView(
+    PaginatedListViewMixin, FilteredListViewMixin, ListView, CreateView
+):
+    model = Product
+    form_class = ProductModelForm
+    template_name = "website/product_listing_cbv.html"
+    success_url = "."
+    object = None
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        self.product_filter = self.request.GET.get("filter", "")
+        return qs.filter(name__icontains=self.product_filter)
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context["filter"] = self.product_filter
+        return context
