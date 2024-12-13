@@ -32,14 +32,25 @@
 </nav>
 </p>
 
-<form id="filter-form" target="." method="get"
+{% comment %} <form id="filter-form" target="." method="get"
     hx-get="/partial/product/list/?page={{page}}&filter={{page_filter}}"
     hx-target="#product-list"
     hx-swap="innerHTML"
 >
     <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
     <button>Filter</button></p>
+</form> {% endcomment %}
+
+<form id="filter-form" target="." method="get"
+    hx-get=".?page={{page}}&filter={{page_filter}}"
+    hx-target="#product-list"
+    hx-swap="outerHTML"
+    hx-select="#product-list"
+>
+    <p><input value="{{ product_filter }}" name="filter" type="text" placeholder="product name" />
+    <button>Filter</button></p>
 </form>
+
 
 {% endblock "content" %}
 
