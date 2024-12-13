@@ -101,3 +101,19 @@ Then run:
 python manage.py makemessages -l fr
 python manage.py compilemessages
 ```
+
+# Production
+
+Install and run a WSGI server:
+
+```
+pip install waitress
+waitress-serve --listen=127.0.0.1:7777 toto.wsgi:application
+```
+
+Then collect the static files for production:
+
+
+```
+python manage.py collectstatic
+```

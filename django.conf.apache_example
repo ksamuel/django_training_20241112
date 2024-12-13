@@ -1,0 +1,20 @@
+
+<VirtualHost *:9999>
+    ServerName 127.0.0.1
+
+    Alias /static/ C:/Users/user/Desktop/formation_django/django_training_20241112/projet_toto_le_retour/static/
+
+    <Directory C:/Users/user/Desktop/formation_django/django_training_20241112/projet_toto_le_retour/static/>
+        Require all granted
+    </Directory>
+
+    ProxyPass /static/ !
+    ProxyPass / http://127.0.0.1:7777/
+    ProxyPassReverse / http://127.0.0.1:7777/
+
+    RequestHeader set X-Real-IP %{REMOTE_ADDR}e
+    RequestHeader set X-Forwarded-For %{REMOTE_ADDR}e
+    RequestHeader set X-Forwarded-Proto "http"
+    RequestHeader set Host %{HTTP_HOST}e
+
+</VirtualHost>
